@@ -11,7 +11,7 @@ class LoadFile(models.Model):
 
     file_patch = models.FileField(upload_to='uploads/', blank=True, null=True)
     file_name = models.CharField(max_length=255)
-    file_hash = models.CharField(max_length=64, unique=True)
+    file_hash = models.CharField(max_length=64)
     create_date = models.DateTimeField(auto_now_add=True)
     loading_status = models.CharField(
         max_length=10,
@@ -19,4 +19,7 @@ class LoadFile(models.Model):
         default=LoadingFileStatus.Pending,
     )
     error = models.CharField(max_length=256 , blank=True , default='')
-    user = models.ForeignKey(CustomUser , on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('file_hash', 'user')

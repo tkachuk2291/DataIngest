@@ -7,7 +7,8 @@ class CustomUser(AbstractUser):
         USER = 'user', 'User'
         ADMIN = 'admin', 'Admin'
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, blank=False)
+    REQUIRED_FIELDS = ['email']
     role = models.CharField(max_length=10, choices=Role.choices, default=Role.USER)
 
     def save(self, *args, **kwargs):

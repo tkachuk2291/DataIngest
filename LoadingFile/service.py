@@ -9,9 +9,9 @@ def read_file(file):
     file_bytes = BytesIO(file.read())
     return pd.read_excel(file_bytes), file_bytes
 
-def check_exist_file(file_bytes):
+def check_exist_file(file_bytes, user):
     file_hash = get_file_hash(file_bytes)
-    return LoadFile.objects.filter(file_hash=file_hash).first(), file_hash
+    return LoadFile.objects.filter(file_hash=file_hash, user=user).first(), file_hash
 
 def create_file(file_name, file_hash, user):
     return LoadFile.objects.create(

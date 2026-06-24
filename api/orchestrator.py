@@ -9,7 +9,7 @@ from RawData.service import insert_data_to_db
 def orchestrator(file_name, file_patch, user):
     df_records, file_bytes = read_file(file_patch)
 
-    existing_file, file_hash = check_exist_file(file_bytes)
+    existing_file, file_hash = check_exist_file(file_bytes, user)
     if existing_file is not None:
         raise ValueError("File already exists")
 

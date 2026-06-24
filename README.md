@@ -53,18 +53,41 @@ python -c "from django.core.management.utils import get_random_secret_key; print
 python manage.py migrate
 ```
 
-**6. Create admin user**
+**6. Create first admin user**
 
 ```bash
 python manage.py createsuperuser
 ```
 
-Then open `/admin/`, find the user and set Role to Admin.
-
 **7. Run**
 
 ```bash
 python manage.py runserver
+```
+
+Open `http://127.0.0.1:8000/admin/`, login for user that was created
+
+After that new users can be created in two ways:
+
+**Option 1 — Admin panel**
+
+`http://127.0.0.1:8000/admin/user/customuser/add/` — fill in username, email, password and role.
+
+**Option 2 — API (curl)**
+
+Get admin token:
+```bash
+curl -X POST http://127.0.0.1:8000/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "your_password"}'
+```
+
+Create user:
+```bash
+curl -X POST http://127.0.0.1:8000/users/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <access_token>" \
+  -d '{"username": "newuser", "email": "newuser@example.com", "password": "password123", "role": "user"}'
 ```
 
 Open `http://127.0.0.1:8000/`
