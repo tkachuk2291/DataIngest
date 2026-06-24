@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Data Ingest</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; background: #f4f6f8; color: #333; }
+    header { background: #fff; border-bottom: 1px solid #e0e0e0; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { font-size: 1.2rem; }
+    header a { font-size: .9rem; color: #4a6cf7; text-decoration: none; }
+    header a:hover { text-decoration: underline; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 1.5rem; margin-bottom: 1.5rem; }
+    h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #444; }
+    .upload-row { display: flex; gap: 1rem; align-items: center; }
+    input[type="file"] { flex: 1; border: 1px solid #ddd; border-radius: 4px; padding: .5rem; font-size: .95rem; }
+    button { padding: .6rem 1.4rem; background: #4a6cf7; color: #fff; border: none; border-radius: 4px; font-size: .95rem; cursor: pointer; white-space: nowrap; }
+    button:hover { background: #3a5ce5; }
+    .msg { padding: .7rem 1rem; border-radius: 4px; margin-bottom: 1rem; font-size: .9rem; }
+    .msg.success { background: #e8f5e9; color: #2e7d32; }
+    .msg.error   { background: #ffebee; color: #c62828; }
+    table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+    th { text-align: left; padding: .6rem 1rem; background: #f0f2f5; color: #555; font-weight: 600; border-bottom: 2px solid #e0e0e0; }
+    td { padding: .6rem 1rem; border-bottom: 1px solid #f0f0f0; }
+    tr:last-child td { border-bottom: none; }
+    .empty { color: #888; font-size: .9rem; padding: .5rem 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Data Ingest</h1>
+    <span>{{ request.user.email }} &nbsp;|&nbsp;
+      <form method="post" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" style="background:none;border:none;color:#4a6cf7;cursor:pointer;font-size:.9rem;padding:0">Logout</button>
+      </form>
+    </span>
+  </header>
+
+  <div class="container">
+
+    <div class="card">
+      <h2>Upload file</h2>
+      {% for message in messages %}
+        <div class="msg {% if message.tags == 'error' %}error{% else %}success{% endif %}">
+          {{ message }}
+        </div>
+      {% endfor %}
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="upload-row">
+          <input type="file" name="file" accept=".xls,.xlsx,.csv">
+          <button type="submit">Upload</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Aggregated results by year</h2>
+      {% if table %}
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Total Impressions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in table %}
+              <tr>
+                <td>{{ row.year }}</td>
+                <td>{{ row.total_impr|floatformat:0 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="empty">No data yet. Upload a file to see results.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</body>
+</html>
