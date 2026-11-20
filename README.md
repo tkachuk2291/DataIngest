@@ -25,7 +25,7 @@ source .venv/bin/activate
 **3. Install dependencies**
 
 ```bash
-pip install -r requirements.txt
+pip install Django djangorestframework djangorestframework-simplejwt pandas openpyxl xlrd python-dotenv
 ```
 
 **4. Configure environment**
